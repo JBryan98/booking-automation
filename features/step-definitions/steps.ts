@@ -1,32 +1,69 @@
 import { Given, When, Then } from '@wdio/cucumber-framework';
 
+import LoginPage from '../pageobjects/login.view';
 import StaysPage from '../pageobjects/stays.view';
 import BookingStay from '../pageobjects/booking.view';
 import CardData from '../pageobjects/cardData.view';
 import UserData from '../pageobjects/userdata.view';
 
-Given(/^I select my destiny (.+)$/, async (destiny) => {
+
+//Stays View
+Given(/^The user is in the stays view$/, async () => {
+    await LoginPage.closeLogin();
+})
+
+Then(/^The user must see the destination options$/, async () => {
+    await expect(StaysPage.searchFields).toBeExisting();
+})
+
+//Enter destination
+
+Given(/^The user is on the destination option$/, async () => {
+    await StaysPage.destination.click();
+})
+
+When(/^The user enter his destination (.*)$/, async (destiny) => {
     await StaysPage.setDestination(destiny);
-});
+})
 
-When(/^I write the range of days: (.*) - (.*) - of (.*)$/, async (start, end, monthYear) => {
-    //await expect(StaysPage.btnConfirmDate).toBeExisting();
+//Date
+
+Given(/^The user is on the date view$/,async () => {
+})
+
+When(/^The user specify the range of days: (.*) - (.*) - of (.*)$/, async (start, end, monthYear) => {
     await StaysPage.setDate(start, end, monthYear)
-});
+})
 
-When(/^I put the age of my child (.*)$/,async (age) => {
+Then(/^The user see the range of days specified on the stays view: (.*)$/, async (dateLabel) => {
+    await expect(StaysPage.labelFields[1]).toHaveTextContaining(dateLabel)
+})
+
+//Rooms and Guests
+Given(/^The user is on the Select rooms and guests view$/, async () => {
+    await StaysPage.roomsAndGuests.click();
+})
+
+When(/^The user select the (.*) of his child$/,async (age) => {
     await StaysPage.setRoomsAndGuests(age);
 })
 
-When(/^I choose my stay$/,async () => {
+Then(/^The user see the rooms and guests that he has specified: (.*)$/, async(roomsGuests) => {
+    await expect(StaysPage.labelFields[2]).toHaveTextContaining(roomsGuests)
+})
+
+Given(/^The user is on the form view$/, async () => {
     await BookingStay.chooseStay();
 })
 
-When(/^I select my room and put my personal info: (.*) - (.*) - (.*) - (.*) - (.*) - (.*) - (.*) - (.*)$/, async (firstName, lastName, email, address, zipCode, city, country, mobilePhone) => {
+When(/^The user fill the inputs with his personal data: (.*) - (.*) - (.*) - (.*) - (.*) - (.*) - (.*) - (.*)$/, async (firstName, lastName, email, address, zipCode, city, country, mobilePhone) => {
     await UserData.fillInfo(firstName, lastName, email, address, zipCode, city, country, mobilePhone);
 })
 
-When(/^ I am on the finish booking page i put my credit card info: (.*) - (.*) - (.*) - (.*)$/, async (cardNumber, cardType, expirationDate, cvcCode) => {
+Given(/^The user is on the final step of the form$/, async () =>{
+})
+
+When(/^I have to fill the form with my credit card info: (.*) - (.*) - (.*) - (.*)$/, async (cardNumber, cardType, expirationDate, cvcCode) => {
     await CardData.finalStep(cardNumber, cardType, expirationDate, cvcCode)
 })
 

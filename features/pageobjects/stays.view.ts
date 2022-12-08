@@ -4,6 +4,15 @@ class StaysPage{
         return $('//android.widget.ImageButton[@content-desc="Navigate up"]')
     }
 
+    //Search Boxes Container
+    public get searchFields(){
+        return $('//android.widget.LinearLayout[@resource-id="com.booking:id/facet_search_box_fields"]')
+    }
+
+    public get labelFields(){
+        return $$('//android.widget.TextView[@resource-id="com.booking:id/facet_search_box_basic_field_label"]')
+    }
+
 
     //Destination
     public get destination(){
@@ -56,35 +65,20 @@ class StaysPage{
         return $('//android.widget.Button[@resource-id="com.booking:id/facet_search_box_cta"]')
     }
 
-
-    //
-    public get property(){
-        return $$('//android.widget.FrameLayout[@resource-id="com.booking:id/results_list_facet"]/androidx.recyclerview.widget.RecyclerView/android.view.ViewGroup')
-    }
-
-    public async setDestination(destino: string): Promise<void>{
-        await this.closeLoginBtn.click();
-        await browser.pause(5000);
-
-        await browser.back();
-
-        await this.destination.click();
+    public async setDestination(destino: string){
 
         await this.destinationInput.click();
-
         await this.destinationInput.setValue(destino);
         await browser.pause(2500);
 
-        /*await this.destinationOption.forEach(async (option) =>{
-            if (await option.getText() === destino) {
-                option.click();
-            }
-           })*/
-        (await this.destinationOption).find(async option => await option.getText() === destino).click()   
+        await this.destinationOption[0].click();
+
+        //(await this.destinationOption).find(async option => await option.getText() === destino).click()   
     }
 
     public async setDate(start: string, end: string, monthYear: string){
         const startDay = await $(`//android.view.View[@content-desc="${start} ${monthYear}"]`);
+        await browser.pause(1500);
         do{
             await driver.touchAction([{ action: 'longPress', x: 600, y: 830 }, { action: 'moveTo', x: 600, y: -400 }, 'release']);
 
@@ -98,26 +92,16 @@ class StaysPage{
     }
 
     public async setRoomsAndGuests(age: string){
-        await this.roomsAndGuests.click();
-        await browser.pause(3000);
-
         await this.roomsAndGuestsOptions[2].click();
         await browser.pause(3000)
 
         do{
+            console.log("Edad enviada por parametro: " + age)
             await driver.touchAction([{ action: 'longPress', x: 525, y: 1160 }, { action: 'moveTo', x: 525, y: -1000 }, 'release'])
-
         }while(await this.ageOfChild.getText() !== `${age} years old`)
 
-        await this.ageOfChild.click();
         await this.okBtn.click();
         await this.applyBtn.click();
-
-        await this.searchBtn.click();
-        await browser.pause(5000)
-
-        await this.property[2].click();
-        await browser.pause(5000)
     }
 }
 

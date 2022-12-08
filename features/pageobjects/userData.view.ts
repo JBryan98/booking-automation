@@ -54,19 +54,21 @@ class UserData{
         await this.emailInput.setValue(email);
         await browser.pause(1000)
 
-        /*await this.addressInput.setValue(address);
-        await browser.pause(1000)
+        if(await this.addressInput.isExisting()){
+            await this.addressInput.setValue(address);
+            await browser.pause(1000)
 
-        await this.zipCodeInput.setValue(zipCode);
-        await browser.pause(1000)*/
+            await this.zipCodeInput.setValue(zipCode);
+            await browser.pause(1000)
 
-        /*do{
-            await driver.touchAction([{ action: 'longPress', x: 600, y: 830 }, { action: 'moveTo', x: 600, y: -400 }, 'release']);
+            do{
+                await driver.touchAction([{ action: 'longPress', x: 600, y: 830 }, { action: 'moveTo', x: 600, y: -400 }, 'release']);
+            }while(await this.cityInput.isExisting() !== true);
 
-        }while(await this.cityInput.isExisting() !== true);*/
+            await this.cityInput.setValue(city);
+            await browser.pause(1000)
+        }
 
-        //await this.cityInput.setValue(city);
-        //await browser.pause(1000)
 
         await this.countryInput.clearValue();
         await browser.pause(1000);

@@ -23,27 +23,32 @@ class CardData{
         return $('//android.widget.Button[@resource-id="com.booking:id/action_button"]')
     }
 
-    public async finalStep(cardNumber: string, cardType: string, expirationDate, cvcCode){
-        await this.cardNumberInput.setValue(cardNumber);
-        await browser.pause(1000);
-
-        await this.cardTypeSpinner.click();
-        await browser.pause(1000);
-
-        await this.cardTypeList.forEach(async (option) =>{
-            if (await option.getText() === cardType) {
-                option.click();
+    public async finalStep(cardNumber: string, cardType: string, expirationDate: string, cvcCode: string){
+        if( await this.cardNumberInput.isExisting()){
+            await this.cardNumberInput.setValue(cardNumber);
+            await browser.pause(1000);
+    
+            await this.cardTypeSpinner.click();
+            await browser.pause(1000);
+    
+            await this.cardTypeList.forEach(async (option) =>{
+                if (await option.getText() === cardType) {
+                    option.click();
+                }
+               })
+            await browser.pause(1000);   
+    
+            await this.expirationDateInput.setValue(expirationDate);
+            await browser.pause(1000);
+            
+            if(await this.cvcInput.isExisting()){
+                await this.cvcInput.setValue(cvcCode);
+                await browser.pause(1000);
             }
-           })
-        await browser.pause(1000);   
 
-        await this.expirationDateInput.setValue(expirationDate);
-        await browser.pause(1000);
-
-        await this.cvcInput.setValue(cvcCode);
-        await browser.pause(1000);
-
-        //await this.bookNowBtn.click();
+            await browser.pause(3000);
+            //await this.bookNowBtn.click();
+        }
     }
 }
 
